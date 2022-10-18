@@ -8,6 +8,23 @@ import (
 	"strings"
 )
 
+func ProcessHandlingClient(conn net.Conn) {
+
+	defer conn.Close()
+
+	for {
+		buf := make([]byte, 1024)
+		n, err := conn.Read(buf)
+
+		if err != nil {
+			fmt.Printf("Ошибка выхода клиента = % v \n", err)
+			return
+		}
+
+		fmt.Print(string(buf[:n]))
+	}
+}
+
 func StartWorkClient() {
 	conn, err := net.Dial("tcp", "0.0.0.0:8888")
 

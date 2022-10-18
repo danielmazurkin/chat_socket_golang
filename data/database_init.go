@@ -20,6 +20,5 @@ func OpenDatabase() (db *sql.DB, err error) {
 	} else {
 		fmt.Println("Error with connecting ", err)
 	}
-
 	return db, err
 }

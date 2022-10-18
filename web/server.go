@@ -1,28 +1,25 @@
 package web
 
 import (
+	"ChatSocket/api"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"net"
 )
 
-func process(conn net.Conn) {
+func StartRoutingServerAPI() {
+	router := gin.Default()
+	router.GET("/", api.RootEndpoint)
+	err := router.Run("localhost:8000")
 
-	defer conn.Close()
-
-	for {
-		buf := make([]byte, 1024)
-		n, err := conn.Read(buf)
-
-		if err != nil {
-			fmt.Printf("Ошибка выхода клиента = % v \n", err)
-			return
-		}
-
-		fmt.Print(string(buf[:n]))
+	if err != nil {
+		fmt.Println("Error up server with api ", err)
+	} else {
+		fmt.Println("Server with API upped")
 	}
 }
 
-func StartWorkServer() {
+func StartWorkServerSockets() {
 	fmt.Println("Сервер начал прослушивание ...")
 
 	listen, err := net.Listen("tcp", "0.0.0.0:8888")
@@ -43,7 +40,12 @@ func StartWorkServer() {
 		} else {
 			fmt.Printf("Accept () успешное соединение = %v по ip клиента = %v \n", conn, conn.RemoteAddr().String())
 		}
-		go process(conn)
+		go ProcessHandlingClient(conn)
 	}
 	fmt.Printf("Подключение прошло успешно по адресу %v", listen)
+}
+
+func StartServers() {
+	StartRoutingServerAPI()
+	StartWorkServerSockets()
 }

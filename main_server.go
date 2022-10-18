@@ -7,5 +7,5 @@ import (
 
 func main() {
 	data.OpenDatabase()
-	web.StartWorkServer()
+	web.StartServers()
 }
