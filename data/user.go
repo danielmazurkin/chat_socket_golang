@@ -5,17 +5,12 @@ import (
 	"fmt"
 )
 
-type UserInterface interface {
-	CreateTableUser()
-	CreateUser()
-}
-
 type UserStruct struct {
 	Username string `json:username`
 	Password string `json:password`
 }
 
-func (*UserStruct) CreateTableUser(db *sql.DB) {
+func (*UserStruct) CreateTable(db *sql.DB) {
 	_, err := db.Exec(
 		`CREATE TABLE IF NOT EXISTS users(
 			   ID INT PRIMARY KEY     NOT NULL,
@@ -27,10 +22,10 @@ func (*UserStruct) CreateTableUser(db *sql.DB) {
 	if err != nil {
 		fmt.Println("Error with creating table", err)
 	} else {
-		fmt.Println("Table was created")
+		fmt.Println("Table users was created")
 	}
 }
 
-func (*UserStruct) CreateUser(Username string, Password string) {
+func (*UserStruct) CreateTableEntity(Username string, Password string) {
 
 }

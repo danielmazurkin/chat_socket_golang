@@ -8,7 +8,9 @@ import (
 
 func InitDatabase(db *sql.DB) {
 	user := new(UserStruct)
-	user.CreateTableUser(db)
+	user.CreateTable(db)
+	message := new(MessageStruct)
+	message.CreateTable(db)
 }
 
 func OpenDatabase() (db *sql.DB, err error) {
