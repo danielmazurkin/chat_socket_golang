@@ -7,6 +7,23 @@ import (
 	"net"
 )
 
+func ProcessHandlingClient(conn net.Conn) {
+
+	defer conn.Close()
+
+	for {
+		buf := make([]byte, 1024)
+		n, err := conn.Read(buf)
+
+		if err != nil {
+			fmt.Printf("Error exit client = % v \n", err)
+			return
+		}
+
+		fmt.Print(string(buf[:n]))
+	}
+}
+
 func StartRoutingServerAPI() {
 	router := gin.Default()
 	router.GET("/", api.RootEndpoint)
@@ -20,32 +37,27 @@ func StartRoutingServerAPI() {
 }
 
 func StartWorkServerSockets() {
-	fmt.Println("Сервер начал прослушивание ...")
+	fmt.Println("Server begin listening ...")
 
 	listen, err := net.Listen("tcp", "0.0.0.0:8888")
 
 	if err != nil {
-		fmt.Println("Ошибка прослушивания =", err)
+		fmt.Println("Error listening =", err)
 		return
 	}
 
 	defer listen.Close()
 
 	for {
-		fmt.Println("Ожидание подключения клиента")
+		fmt.Println("Waiting connected client")
 		conn, err := listen.Accept()
 
 		if err != nil {
-			fmt.Println("Возникла следующая ошибка: ", err)
+			fmt.Println("Happen next error: ", err)
 		} else {
-			fmt.Printf("Accept () успешное соединение = %v по ip клиента = %v \n", conn, conn.RemoteAddr().String())
+			fmt.Printf("Accept () succesfful connection = %v by ip addr client = %v \n", conn, conn.RemoteAddr().String())
 		}
 		go ProcessHandlingClient(conn)
 	}
-	fmt.Printf("Подключение прошло успешно по адресу %v", listen)
-}
-
-func StartServers() {
-	StartRoutingServerAPI()
-	StartWorkServerSockets()
+	fmt.Printf("Connection was successful %v", listen)
 }

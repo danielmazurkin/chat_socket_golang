@@ -28,6 +28,14 @@ func (*MessageStruct) CreateTable(db *sql.DB) {
 	}
 }
 
-func (*MessageStruct) CreateTableEntity(message string, user_id int) {
+func (*MessageStruct) CreateTableEntity(db *sql.DB, message string, user_id int) {
+	_, err := db.Exec(
+		`INSERT INTO message VALUES(?, ?)`,
+		message, user_id,
+	)
 
+	if err != nil {
+		fmt.Println("Error was save message to database ", err)
+		return
+	}
 }
