@@ -1,8 +1,8 @@
 package data
 
 import (
+	"ChatSocket/logger"
 	"database/sql"
-	"log"
 )
 
 type MessageStruct struct {
@@ -23,9 +23,9 @@ func (*MessageStruct) CreateTable(db *sql.DB) {
 	)
 
 	if err != nil {
-		log.Println("Error creating message table: ", err)
+		logger.Log.Println("Error creating message table: ", err)
 	} else {
-		log.Println("Table messages was created")
+		logger.Log.Println("Table messages was created")
 	}
 }
 
@@ -37,7 +37,7 @@ func (*MessageStruct) CreateTableEntity(db *sql.DB, message string, user_id int)
 	)
 
 	if err != nil {
-		log.Println("Error was save message to database ", err)
+		logger.Log.Println("Error was save message to database ", err)
 		return
 	}
 }
@@ -47,9 +47,9 @@ func (*MessageStruct) HasEntityTable(db *sql.DB, username string) bool {
 	sqlStatement := `SELECT 1 FROM message WHERE username = $1;`
 
 	if err := db.QueryRow(sqlStatement, username).Scan(&has_entity); err != nil {
-		log.Println("Error checking username: ", err)
+		logger.Log.Println("Error checking username: ", err)
 	} else {
-		log.Println("Result executing query: ", has_entity)
+		logger.Log.Println("Result executing query: ", has_entity)
 	}
 
 	return has_entity

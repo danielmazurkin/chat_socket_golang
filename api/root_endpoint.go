@@ -1,9 +1,9 @@
 package api
 
 import (
+	"ChatSocket/logger"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 )
 
@@ -12,7 +12,7 @@ func RootEndpoint(c *gin.Context) {
 	_, err := json.Marshal(msg)
 
 	if err != nil {
-		log.Println("Error with decoding")
+		logger.Log.Println("Error with decoding")
 		return
 	}
 

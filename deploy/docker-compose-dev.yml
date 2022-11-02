@@ -1,22 +1,23 @@
 version: '3.1'
 
 services:
-
   db:
-    image: postgres
+    image: postgres:14.1-alpine
     restart: always
     environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: postgres
-      POSTGRES_DB: postgres
-      POSTGRES_HOST: postgres
+      - POSTGRES_USER=chat_user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=chat_user
+    ports:
+      - '5433:5433'
+    volumes:
+      - db:/var/lib/postgresql/data
 
   redis:
     image: redis:6.2
     expose:
       - "6379"
 
-
 volumes:
-  postgres_data:
-  postgres_backups:
+  db:
+    driver: local

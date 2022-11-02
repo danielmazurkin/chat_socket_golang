@@ -1,26 +1,13 @@
 package data
 
 import (
+	"ChatSocket/logger"
 	"database/sql"
+	"fmt"
 	"github.com/go-redis/redis/v9"
+	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
-	"log"
-	"os"
 )
-
-func init() {
-	f, err := os.OpenFile("log_file", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("error opening file: %v", err)
-	}
-	defer f.Close()
-
-	log.SetOutput(f)
-	log.SetPrefix("LOG: ")
-	log.SetFlags(log.Ldate | log.Lmicroseconds | log.Llongfile)
-
-	log.Println("init started")
-}
 
 func InitDatabase(db *sql.DB) {
 	user := new(UserStruct)
@@ -40,13 +27,25 @@ func InitRedisStorage() *redis.Client {
 }
 
 func OpenDatabase() (db *sql.DB, err error) {
-	db, err = sql.Open("sqlite3", "database.db")
+
+	host := GetEnvFallback("POSTGRES_HOST", "localhost")
+	port := 5433
+	user := GetEnvFallback("POSTGRES_USER", "chat_user")
+	password := GetEnvFallback("POSTGRES_PASSWORD", "password")
+	dbname := GetEnvFallback("POSTGRES_DB", "chat_user")
+
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+
+	logger.Log.Println("PSQL INFO: ", psqlInfo)
+	db, err = sql.Open("postgres", psqlInfo)
 
 	if err == nil {
-		log.Println("Connecting with database")
+		logger.Log.Println("Connecting with database")
 		InitDatabase(db)
 	} else {
-		log.Println("Error with connecting ", err)
+		logger.Log.Println("Error with connecting ", err)
 	}
 	return db, err
 }

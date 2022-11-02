@@ -2,17 +2,11 @@ package web
 
 import (
 	"ChatSocket/api"
+	"ChatSocket/logger"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net"
 )
-
-func init() {
-	log.SetPrefix("LOG: ")
-	log.SetFlags(log.Ldate | log.Lmicroseconds | log.Llongfile)
-	log.Println("init started")
-}
 
 func ProcessHandlingClient(conn net.Conn) {
 
@@ -23,7 +17,7 @@ func ProcessHandlingClient(conn net.Conn) {
 		n, err := conn.Read(buf)
 
 		if err != nil {
-			log.Printf("Error exit client = % v \n", err)
+			logger.Log.Println("Error exit client = % v \n", err)
 			return
 		}
 
@@ -37,34 +31,34 @@ func StartRoutingServerAPI() {
 	err := router.Run("localhost:8000")
 
 	if err != nil {
-		log.Println("Error up server with api ", err)
+		logger.Log.Println("Error up server with api ", err)
 	} else {
-		log.Println("Server with API upped")
+		logger.Log.Println("Server with API upped")
 	}
 }
 
 func StartWorkServerSockets() {
-	log.Println("Server begin listening ...")
+	logger.Log.Println("Server begin listening ...")
 
 	listen, err := net.Listen("tcp", "0.0.0.0:8888")
 
 	if err != nil {
-		log.Println("Error listening =", err)
+		logger.Log.Println("Error listening =", err)
 		return
 	}
 
 	defer listen.Close()
 
 	for {
-		log.Println("Waiting connected client")
+		logger.Log.Println("Waiting connected client")
 		conn, err := listen.Accept()
 
 		if err != nil {
-			log.Println("Happen next error: ", err)
+			logger.Log.Println("Happen next error: ", err)
 		} else {
-			log.Printf("Accept () succesfful connection = %v by ip addr client = %v \n", conn, conn.RemoteAddr().String())
+			logger.Log.Println("Accept () succesfful connection = %v by ip addr client = %v \n", conn, conn.RemoteAddr().String())
 		}
 		go ProcessHandlingClient(conn)
 	}
-	log.Printf("Connection was successful %v", listen)
+	logger.Log.Println("Connection was successful %v", listen)
 }

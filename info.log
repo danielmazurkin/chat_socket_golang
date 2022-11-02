@@ -1,0 +1,7 @@
+2022/11/02 18:26:23 logger.go:25: LogFile : ./info.log
+2022/11/02 18:26:23 database_init.go:41: PSQL INFO:  host=localhost port=5433 user=chat_user password=password dbname=chat_user sslmode=disable
+2022/11/02 18:26:23 database_init.go:45: Connecting with database
+2022/11/02 18:26:23 user.go:31: Error with creating table read tcp 127.0.0.1:56602->127.0.0.1:5433: read: connection reset by peer
+2022/11/02 18:26:23 message.go:26: Error creating message table:  read tcp 127.0.0.1:56606->127.0.0.1:5433: read: connection reset by peer
+2022/11/02 18:26:23 client.go:20: Connecting successful:  <nil>
+2022/11/02 18:26:28 user.go:45: Error creating user in chat read tcp 127.0.0.1:56610->127.0.0.1:5433: read: connection reset by peer

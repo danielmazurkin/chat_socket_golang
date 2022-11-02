@@ -2,6 +2,7 @@ package web
 
 import (
 	"ChatSocket/data"
+	"ChatSocket/logger"
 	"bufio"
 	"fmt"
 	"net"
@@ -13,10 +14,10 @@ func StartWorkClient() {
 	conn, err := net.Dial("tcp", "0.0.0.0:8888")
 	db, err := data.OpenDatabase()
 	if err != nil {
-		fmt.Println("Error connecting client: ", err)
+		logger.Log.Println("Error connecting client: ", err)
 		return
 	}
-	fmt.Println("Connecting successful: ", conn)
+	logger.Log.Println("Connecting successful: ", conn)
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("1) Register in chat")
 	fmt.Println("2) Enter in chat")
@@ -55,7 +56,7 @@ func StartWorkClient() {
 		// Отправляем строку на сервер
 		_, err = conn.Write([]byte(line + "\n"))
 		if err != nil {
-			fmt.Println("conn.Write=", err)
+			logger.Log.Println("conn.Write=", err)
 		}
 	}
 
