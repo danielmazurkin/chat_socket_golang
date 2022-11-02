@@ -12,7 +12,6 @@ import (
 func StartWorkClient() {
 	conn, err := net.Dial("tcp", "0.0.0.0:8888")
 	db, err := data.OpenDatabase()
-
 	if err != nil {
 		fmt.Println("Error connecting client: ", err)
 		return
@@ -27,9 +26,18 @@ func StartWorkClient() {
 
 	if line == string('1') {
 		ClientRegistration(db)
+	} else if line == string('2') {
+		username := EnterInChat(db)
+
+		if len(username) == 0 {
+			fmt.Println("User not created..")
+			return
+		}
+
 	}
 
 	for {
+		fmt.Println("Enter message to chat..")
 		// Считываем строку пользовательского ввода с терминала и готовимся к отправке на сервер
 		line, err := reader.ReadString('\n')
 
@@ -50,4 +58,6 @@ func StartWorkClient() {
 			fmt.Println("conn.Write=", err)
 		}
 	}
+
+	defer db.Close()
 }

@@ -2,8 +2,8 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 )
 
@@ -12,7 +12,7 @@ func RootEndpoint(c *gin.Context) {
 	_, err := json.Marshal(msg)
 
 	if err != nil {
-		fmt.Println("Error with decoding")
+		log.Println("Error with decoding")
 		return
 	}
 

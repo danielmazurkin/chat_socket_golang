@@ -4,8 +4,15 @@ import (
 	"ChatSocket/api"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net"
 )
+
+func init() {
+	log.SetPrefix("LOG: ")
+	log.SetFlags(log.Ldate | log.Lmicroseconds | log.Llongfile)
+	log.Println("init started")
+}
 
 func ProcessHandlingClient(conn net.Conn) {
 
@@ -16,7 +23,7 @@ func ProcessHandlingClient(conn net.Conn) {
 		n, err := conn.Read(buf)
 
 		if err != nil {
-			fmt.Printf("Error exit client = % v \n", err)
+			log.Printf("Error exit client = % v \n", err)
 			return
 		}
 
@@ -30,34 +37,34 @@ func StartRoutingServerAPI() {
 	err := router.Run("localhost:8000")
 
 	if err != nil {
-		fmt.Println("Error up server with api ", err)
+		log.Println("Error up server with api ", err)
 	} else {
-		fmt.Println("Server with API upped")
+		log.Println("Server with API upped")
 	}
 }
 
 func StartWorkServerSockets() {
-	fmt.Println("Server begin listening ...")
+	log.Println("Server begin listening ...")
 
 	listen, err := net.Listen("tcp", "0.0.0.0:8888")
 
 	if err != nil {
-		fmt.Println("Error listening =", err)
+		log.Println("Error listening =", err)
 		return
 	}
 
 	defer listen.Close()
 
 	for {
-		fmt.Println("Waiting connected client")
+		log.Println("Waiting connected client")
 		conn, err := listen.Accept()
 
 		if err != nil {
-			fmt.Println("Happen next error: ", err)
+			log.Println("Happen next error: ", err)
 		} else {
-			fmt.Printf("Accept () succesfful connection = %v by ip addr client = %v \n", conn, conn.RemoteAddr().String())
+			log.Printf("Accept () succesfful connection = %v by ip addr client = %v \n", conn, conn.RemoteAddr().String())
 		}
 		go ProcessHandlingClient(conn)
 	}
-	fmt.Printf("Connection was successful %v", listen)
+	log.Printf("Connection was successful %v", listen)
 }

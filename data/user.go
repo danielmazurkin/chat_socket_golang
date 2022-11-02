@@ -4,8 +4,14 @@ import (
 	"crypto/md5"
 	"database/sql"
 	"encoding/hex"
-	"fmt"
+	"log"
 )
+
+func init() {
+	log.SetPrefix("LOG: ")
+	log.SetFlags(log.Ldate | log.Lmicroseconds | log.Llongfile)
+	log.Println("init started")
+}
 
 func GetMD5Hash(text string) string {
 	hasher := md5.New()
@@ -28,9 +34,9 @@ func (*UserStruct) CreateTable(db *sql.DB) {
 	)
 
 	if err != nil {
-		fmt.Println("Error with creating table", err)
+		log.Println("Error with creating table", err)
 	} else {
-		fmt.Println("Table users was created")
+		log.Println("Table users was created")
 	}
 }
 
@@ -42,21 +48,21 @@ func (*UserStruct) CreateTableEntity(db *sql.DB, username string, password strin
 	)
 
 	if err != nil {
-		fmt.Println("Error creating user in chat")
+		log.Println("Error creating user in chat", err)
 	} else {
-		fmt.Println("User was created succesfull")
+		log.Println("User was created succesfull")
 	}
 }
 
-func (*UserStruct) HasEntityTable(db *sql.DB, username string) {
+func (*UserStruct) HasEntityTable(db *sql.DB, username string) bool {
+	var has_entity bool
 	sqlStatement := `SELECT 1 FROM users WHERE name = $1;`
 
-	result, err := db.Exec(sqlStatement, username)
-
-	if err != nil {
-		fmt.Println("Error checking username: ", err)
+	if err := db.QueryRow(sqlStatement, username).Scan(&has_entity); err != nil {
+		log.Println("Error checking username: ", err)
 	} else {
-		fmt.Println("Result executing query: ", result)
+		log.Println("Result executing query: ", has_entity)
 	}
 
+	return has_entity
 }

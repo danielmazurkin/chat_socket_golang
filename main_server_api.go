@@ -7,5 +7,6 @@ import (
 
 func main() {
 	data.OpenDatabase()
+	data.InitRedisStorage()
 	web.StartRoutingServerAPI()
 }
